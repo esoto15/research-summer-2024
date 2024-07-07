@@ -3,12 +3,18 @@
 # install.packages("ggplot2")
 # install.packages("ggdendro")
 # install.packages("readxl")
+install.packages("lime")
+install.packages("caret")
+install.packages("randomForest")  # Example of a model package
 
 
 library(cluster)
 library(ggplot2)
 library(ggdendro)
 library(readxl)
+install.packages("lime")
+install.packages("caret")
+install.packages("randomForest")  # Example of a model package
 
 # load file
 data <- read_excel("tones_encoded.xlsx")
