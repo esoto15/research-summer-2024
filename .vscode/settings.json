@@ -2,5 +2,14 @@
     "cSpell.words": [
         "kmeans",
         "tones_encoded"
-    ]
+    ],
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./factor-analysis",
+        "-p",
+        "*test.py"
+    ],
+    "python.testing.pytestEnabled": false,
+    "python.testing.unittestEnabled": true
 }
