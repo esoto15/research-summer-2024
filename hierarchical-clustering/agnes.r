@@ -11,36 +11,32 @@ library(ggdendro)
 library(readxl)
 library(openxlsx)
 
-# Load data
+# --------------Dataset----------------
 data <- read_excel("datasets/demographics_encoded.xlsx")
 
-# Check data structure
-head(data)
+# --------------Hierarchical Clustering----------------
+# Distance metrics to explore
+distance_metrics <- c("euclidean", "manhattan", "maximum", "canberra", 'gower')
 
-# Apply AGNES clustering
-agnes_result <- agnes(data, method = "ward", metric = "manhattan")
 
-# Convert the result to a dendrogram
-dendro <- as.dendrogram(agnes_result)
+# Try different linkage methods
+agnes_ward <- agnes(data, method = "ward")
+agnes_single <- agnes(data, method = "single")
+agnes_complete <- agnes(data, method = "complete")
+agnes_average <- agnes(data, method = "average")
 
-# Plot the dendrogram using ggplot2
-dendro_data <- dendro_data(dendro)
-ggdendrogram(dendro_data, rotate = TRUE) + 
-  labs(title = "Dendrogram of AGNES Clustering", x = "Sample index", y = "Height")
-plot(dendro, main = "Dendrogram of AGNES Clustering")
+# Plot dendrograms for comparison
+par(mfrow = c(2, 2))
+plot(agnes_ward, which.plot = 2, main = "Ward's Method")
+plot(agnes_single, which.plot = 2, main = "Single Linkage")
+plot(agnes_complete, which.plot = 2, main = "Complete Linkage")
+plot(agnes_average, which.plot = 2, main = "Average Linkage")
 
-# Determine the number of clusters
-# Let's say we want to cut the dendrogram to form 4 clusters
+# Evaluate using silhouette scores (example with Ward's method)
 num_clusters <- 4
+cluster_labels <- cutree(as.hclust(agnes_ward), k = num_clusters)
+sil_ward <- silhouette(cluster_labels, dist(data))
 
-# Cut the dendrogram to form clusters
-cluster_labels <- cutree(as.hclust(agnes_result), k = num_clusters)
+mean(sil_ward[, 3]) # Mean silhouette score for Ward's method
 
-# Add the cluster labels to the dataset
-data$cluster <- cluster_labels
-
-# Check the updated data structure
-head(data)
-
-# Export the updated dataset to an Excel file
-write.xlsx(data, "hierarchical-clustering/demo-encoded-with-clusters.xlsx")
+# Repeat the silhouette calculation for other methods if needed
